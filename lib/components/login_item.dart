@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gdsc_2024/backgrounds/home_background.dart';
+import 'package:gdsc_2024/services/api_service.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,26 +33,19 @@ class _LoginItemState extends State<LoginItem> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(height: 0.07 * deviceHeight),
-              _buildInputForm(context, usernameController),
-              SizedBox(height: 0.01 * deviceHeight),
-              _buildInputForm(context, passwordController, isPassword: true),
-              _buildRowSupport(),
-              _buildButton(),
-              _buildTextNavigator(),
-              SizedBox(height: 0.07 * deviceHeight),
-            ],
-          ),
-        ),
+        SizedBox(height: 0.07 * deviceHeight),
+        _buildInputForm(usernameController),
+        SizedBox(height: 0.01 * deviceHeight),
+        _buildInputForm(passwordController, isPassword: true),
+        _buildRowSupport(),
+        _buildButton(),
+        _buildTextNavigator(),
+        SizedBox(height: 0.07 * deviceHeight),
       ],
     );
   }
 
-  Widget _buildInputForm(BuildContext context, TextEditingController controller,
+  Widget _buildInputForm(TextEditingController controller,
       {bool isPassword = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -88,20 +83,35 @@ class _LoginItemState extends State<LoginItem> {
   }
 
   Widget _buildButton() {
-    return Container(
-      height: 0.06 * deviceHeight,
-      width: 0.76 * deviceWidth,
-      decoration: const BoxDecoration(
-        color: AppStyles.primaryColor1,
-        borderRadius: BorderRadius.all(
-          Radius.circular(15),
+    return GestureDetector(
+      onTap: () async {
+        String username = usernameController.text;
+        String password = passwordController.text;
+
+        bool loginSuccess = await ApiService().loginUser(username, password);
+
+        if (loginSuccess) {
+          print('Login success');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeBackground(),
+            ),
+          );
+        } else {
+          print('Login failed');
+        }
+      },
+      child: Container(
+        height: 0.06 * deviceHeight,
+        width: 0.76 * deviceWidth,
+        decoration: const BoxDecoration(
+          color: AppStyles.primaryColor1,
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
+          ),
         ),
-      ),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            print('Sign in button was pressed');
-          },
+        child: Center(
           child: Text(
             "Sign in",
             style: TextStyle(
@@ -114,6 +124,7 @@ class _LoginItemState extends State<LoginItem> {
       ),
     );
   }
+
 
   Widget _buildRowSupport() {
     return Container(
