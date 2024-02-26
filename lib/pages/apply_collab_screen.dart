@@ -7,15 +7,16 @@ class ApllyCollabScreen extends StatefulWidget {
   final Collab collab;
 
   const ApllyCollabScreen({
-    Key? key, // Fix the parameter name to key
+    Key? key,
     required this.collab,
-  }) : super(key: key); // Fix the super constructor
+  }) : super(key: key);
 
   @override
-  State<ApllyCollabScreen> createState() => _ApllyCollabScreenState();
+  _ApllyCollabScreenState createState() => _ApllyCollabScreenState();
 }
 
 class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
+  late PageController _pageController;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -25,14 +26,15 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
   TextEditingController describtionController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    PageController _pageController = PageController();
     int _currentPage = 0;
 
-    GlobalKey<FormState> _firstFormKey = GlobalKey<FormState>();
-    GlobalKey<FormState> _secondFormKey = GlobalKey<FormState>();
-    final double deviceWidth = MediaQuery.of(context).size.width;
-    final double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -46,8 +48,8 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
           Material(
             elevation: 10,
             child: Container(
-              width: deviceWidth,
-              height: 0.75 * deviceHeight,
+              width: MediaQuery.of(context).size.width,
+              height: 0.75 * MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(20),
@@ -55,7 +57,6 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
               ),
               child: PageView(
                 controller: _pageController,
-                // physics: NeverScrollableScrollPhysics(),
                 onPageChanged: (int page) {
                   setState(() {
                     _currentPage = page;
@@ -114,7 +115,7 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
         _buildDescField(
           describtionController,
           'Mô tả',
-        )
+        ),
       ],
     );
   }
@@ -180,8 +181,8 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
           Text(
             widget.collab.content,
             style: AppStyles.Label,
-            maxLines: 2, // Set your desired maximum number of lines
-            overflow: TextOverflow.ellipsis, // Specify how to handle overflow
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           Row(
             children: [
@@ -242,7 +243,7 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -263,7 +264,7 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
           ),
           SizedBox(height: 10),
           Text(
-            'Mô tả chi tiết và thêm minh chứng ̣̣̣̣̣( nếu có )',
+            'Mô tả chi tiết và thêm minh chứng (nếu có)',
             style: AppStyles.Body2,
           ),
           SizedBox(height: 15),
@@ -288,30 +289,22 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
                 ],
               ),
             ),
-          )
+          ),
+          _buildButtonToSubmit(),
         ],
       ),
     );
   }
 
-  Widget _buildButtonToNext(
-    GlobalKey<FormState> formKey,
-    PageController pageController,
-  ) {
+  Widget _buildButtonToSubmit() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       child: ElevatedButton(
         onPressed: () {
-          // if (formKey.currentState!.validate()) {
-          //   pageController.nextPage(
-          //     duration: Duration(milliseconds: 300),
-          //     curve: Curves.easeInOut,
-          //   );
-          // }
           _submitForm();
         },
         child: Text(
-          'Next',
+          'Submit',
           style: TextStyle(fontSize: 16),
         ),
       ),
@@ -319,7 +312,6 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
   }
 
   Future<void> _submitForm() async {
-    // Prepare your data for the API request
     Map<String, dynamic> requestData = {
       "fullName": nameController.text,
       "email": emailController.text,
@@ -331,7 +323,6 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
       "collabId": widget.collab.id
     };
 
-    // Call the API using the provided function
     await CollabRequestService().postCollabRequest(requestData);
   }
 }

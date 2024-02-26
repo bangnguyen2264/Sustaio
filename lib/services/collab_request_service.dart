@@ -8,9 +8,15 @@ class CollabRequestService {
   Future<void> postCollabRequest(Map<String, dynamic> requestData) async {
     String? token = await getSavedToken();
     try {
+      print(jsonEncode(requestData));
       final response = await http.post(
         Uri.parse('$baseUrl/api/v1/collab-requests'),
-        headers: {'Authorization': '$token'},
+        headers: {
+          'Authorization': '$token',
+          'accept': '*/*',
+          'Content-Type': 'application/json',
+          'charset': 'utf-8',
+        },
         body: jsonEncode(requestData),
       );
       if (response.statusCode == 200) {
@@ -18,6 +24,7 @@ class CollabRequestService {
         print('POST request successful');
         print('Response: ${response.body}');
       } else {
+        print(response.headers);
         // If the server did not return a 200 OK response,
         // throw an exception.
         throw Exception(
