@@ -20,6 +20,7 @@ class CollabScreen extends StatelessWidget {
           actions: [
             _buildIconSearch(),
           ],
+          automaticallyImplyLeading: false,
           bottom: TabBar(
             tabs: [
               Tab(text: 'Recommended'),

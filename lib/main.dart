@@ -10,6 +10,7 @@ import 'package:gdsc_2024/pages/collabdetails_screen.dart';
 import 'package:gdsc_2024/pages/home_screen.dart';
 import 'package:gdsc_2024/pages/noti_screen.dart';
 import 'package:gdsc_2024/pages/onboarding_screen.dart';
+import 'package:gdsc_2024/pages/success_screen.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
 import 'package:gdsc_2024/utils/data_collab.dart';
 
