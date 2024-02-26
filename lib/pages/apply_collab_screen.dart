@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gdsc_2024/model/collab_form.dart';
+import 'package:gdsc_2024/pages/success_screen.dart';
 import 'package:gdsc_2024/services/collab_request_service.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
 
@@ -302,6 +303,12 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
       child: ElevatedButton(
         onPressed: () {
           _submitForm();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SuccessScreen(),
+            ),
+          );
         },
         child: Text(
           'Submit',
