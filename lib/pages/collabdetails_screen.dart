@@ -23,7 +23,11 @@ class CollabDetailsScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-              child: Image.asset('assets/images/avtBr.png'),
+              width: double.infinity,
+              child: Image.asset(
+                'assets/images/avtBr.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Positioned(
@@ -38,22 +42,26 @@ class CollabDetailsScreen extends StatelessWidget {
               color: Colors.white,
               child: ListView(
                 children: [
+                  SizedBox(height: 20),
                   _buildDiscr(),
                   _buildAddDiscr(),
+                  _buildConnectInfor(),
                   _buildConnectInfor(),
                 ],
               ),
             ),
           ),
           Positioned(
-            top: h * 0.29,
+            top: h * 0.27,
             right: 0,
             left: 0,
             bottom: 0,
             child: Container(
+              width: 0.88 * w,
+              height: 0.15 * h,
               margin: EdgeInsets.symmetric(horizontal: 25),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildUserImage(context),
                   _buildTextContent(),
@@ -62,7 +70,22 @@ class CollabDetailsScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-              left: 0, right: 0, bottom: 0, child: _buildButtonApply(context)),
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildButtonApply(context),
+          ),
+          Positioned(
+            top: h * 0.04,
+            left: w * 0.03,
+            child: IconButton(
+              icon: Image.asset('assets/icons/Back.png'),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -75,8 +98,8 @@ class CollabDetailsScreen extends StatelessWidget {
         ClipOval(
           child: Image.network(
             collab.userDto.avatarUrl,
-            width: 0.12 * MediaQuery.of(context).size.height,
-            height: 0.12 * MediaQuery.of(context).size.height,
+            width: 0.15 * MediaQuery.of(context).size.height,
+            height: 0.15 * MediaQuery.of(context).size.height,
             fit: BoxFit.cover,
           ),
         ),
@@ -87,22 +110,29 @@ class CollabDetailsScreen extends StatelessWidget {
   Widget _buildTextContent() {
     return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          SizedBox(height: 35),
           Text(
             collab.userDto.name,
             style: AppStyles.Heading3,
             maxLines: 2, // Set your desired maximum number of lines
             overflow: TextOverflow.ellipsis, // Specify how to handle overflow
           ),
-          Row(
-            children: [
-              Image.asset('assets/icons/discount.png'),
-              Text(
-                collab.userDto.categoryAccount,
-                style: AppStyles.Subtitle,
-              ),
-            ],
+          Container(
+            child: Row(
+              children: [
+                Image.asset('assets/icons/discount.png'),
+                SizedBox(
+                  width: 5,
+                ),
+                // Add some space between the icon and the text
+                Text(
+                  collab.userDto.categoryAccount,
+                  style: AppStyles.Subtitle,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -195,10 +225,23 @@ class CollabDetailsScreen extends StatelessWidget {
     return Material(
       elevation: 10,
       child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20.0),
+          ),
+        ),
         width: MediaQuery.of(context).size.width,
         height: 0.1 * MediaQuery.of(context).size.height,
         child: Center(
           child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFF77E26),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              minimumSize: Size(145, 50),
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -209,7 +252,12 @@ class CollabDetailsScreen extends StatelessWidget {
                 ),
               );
             },
-            child: Text('Apply'),
+            child: Text(
+              'Apply',
+              style: AppStyles.Subtitle.copyWith(
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),

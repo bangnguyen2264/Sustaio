@@ -77,38 +77,34 @@ class CollabCard extends StatelessWidget {
             maxLines: 2, // Set your desired maximum number of lines
             overflow: TextOverflow.ellipsis, // Specify how to handle overflow
           ),
-          Row(
-            children: [
-              Image.asset('assets/icons/discount.png'),
-              Text(
-                collabCard.userDto.categoryAccount,
-                style: AppStyles.Body2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          _buildInforTetx(
+            'assets/icons/discount.png',
+            collabCard.userDto.categoryAccount,
           ),
-          Row(
-            children: [
-              Image.asset('assets/icons/Group.png'),
-              Text(
-                collabCard.categoryDto.name,
-                style: AppStyles.Body2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          _buildInforTetx(
+            'assets/icons/Group.png',
+            collabCard.categoryDto.name,
           ),
-          Row(
-            children: [
-              Image.asset('assets/icons/location.png'),
-              Text(
-                collabCard.address,
-                style: AppStyles.Body2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          _buildInforTetx(
+            'assets/icons/location.png',
+            collabCard.address,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInforTetx(String imagePath, String text) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Image.asset(imagePath),
+          Text(
+            text,
+            style: AppStyles.Body2,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
