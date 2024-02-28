@@ -7,12 +7,7 @@ import 'package:gdsc_2024/backgrounds/home_background.dart';
 import 'package:gdsc_2024/firebase_options.dart';
 import 'package:gdsc_2024/model/push_noti.dart';
 import 'package:gdsc_2024/pages/collabdetails_screen.dart';
-import 'package:gdsc_2024/pages/home_screen.dart';
-import 'package:gdsc_2024/pages/noti_screen.dart';
 import 'package:gdsc_2024/pages/onboarding_screen.dart';
-import 'package:gdsc_2024/pages/success_screen.dart';
-import 'package:gdsc_2024/utils/app_styles.dart';
-import 'package:gdsc_2024/utils/data.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -63,7 +58,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: HomeBackground(),
+        body: OnboardingScreen(),
       ),
     );
   }

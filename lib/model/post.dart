@@ -1,5 +1,4 @@
 import 'package:gdsc_2024/model/category.dart';
-import 'package:intl/intl.dart';
 
 class Post {
   final int id;
