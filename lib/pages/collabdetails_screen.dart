@@ -36,13 +36,17 @@ class CollabDetailsScreen extends StatelessWidget {
             bottom: 0,
             top: h * 0.4,
             child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20.0),
+                ),
+              ),
               margin: EdgeInsets.symmetric(horizontal: 15),
-              height: 0.6 * h,
+              height: 0.61 * h,
               width: w,
-              color: Colors.white,
+              alignment: Alignment.bottomLeft,
               child: ListView(
                 children: [
-                  SizedBox(height: 20),
                   _buildDiscr(),
                   _buildAddDiscr(),
                   _buildConnectInfor(),
@@ -52,7 +56,7 @@ class CollabDetailsScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: h * 0.27,
+            top: h * 0.26,
             right: 0,
             left: 0,
             bottom: 0,
@@ -61,10 +65,11 @@ class CollabDetailsScreen extends StatelessWidget {
               height: 0.15 * h,
               margin: EdgeInsets.symmetric(horizontal: 25),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildUserImage(context),
-                  _buildTextContent(),
+                  SizedBox(width: 15),
+                  _buildTextContent(context),
                 ],
               ),
             ),
@@ -98,8 +103,8 @@ class CollabDetailsScreen extends StatelessWidget {
         ClipOval(
           child: Image.network(
             collab.userDto.avatarUrl,
-            width: 0.15 * MediaQuery.of(context).size.height,
-            height: 0.15 * MediaQuery.of(context).size.height,
+            width: 0.14 * MediaQuery.of(context).size.height,
+            height: 0.14 * MediaQuery.of(context).size.height,
             fit: BoxFit.cover,
           ),
         ),
@@ -107,30 +112,55 @@ class CollabDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextContent() {
+  Widget _buildTextContent(BuildContext context) {
     return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 35),
           Text(
             collab.userDto.name,
             style: AppStyles.Heading3,
-            maxLines: 2, // Set your desired maximum number of lines
-            overflow: TextOverflow.ellipsis, // Specify how to handle overflow
           ),
           Container(
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset('assets/icons/discount.png'),
-                SizedBox(
-                  width: 5,
+                Row(
+                  children: [
+                    Image.asset('assets/icons/discount.png'),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    // Add some space between the icon and the text
+                    Text(
+                      collab.userDto.categoryAccount,
+                      style: AppStyles.Subtitle,
+                    ),
+                  ],
                 ),
-                // Add some space between the icon and the text
-                Text(
-                  collab.userDto.categoryAccount,
-                  style: AppStyles.Subtitle,
-                ),
+                if (collab.verified) // Remove curly braces here
+                  Container(
+                    width: 0.425 * MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Color(0xFF00E632),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/icons/Checked.png'),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "Background Check",
+                          style: AppStyles.Body1.copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
@@ -140,24 +170,22 @@ class CollabDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildDiscr() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Mô tả',
-            style: AppStyles.Heading3,
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Text(
-            collab.descEnterprise,
-            style: AppStyles.Body1,
-            maxLines: 7,
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Mô tả',
+          style: AppStyles.Heading3,
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Text(
+          collab.descEnterprise,
+          style: AppStyles.Body1,
+          maxLines: 7,
+        ),
+      ],
     );
   }
 
