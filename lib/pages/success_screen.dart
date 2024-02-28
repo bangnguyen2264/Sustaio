@@ -35,6 +35,12 @@ class SuccessScreen extends StatelessWidget {
                 ),
               ),
               style: ButtonStyle(
+                fixedSize: MaterialStateProperty.all(
+                  Size(
+                    0.9 * MediaQuery.of(context).size.width,
+                    0.06 * MediaQuery.of(context).size.height,
+                  ),
+                ),
                 backgroundColor:
                     MaterialStateProperty.all(AppStyles.primaryColor1),
               ),
