@@ -12,7 +12,7 @@ import 'package:gdsc_2024/pages/noti_screen.dart';
 import 'package:gdsc_2024/pages/onboarding_screen.dart';
 import 'package:gdsc_2024/pages/success_screen.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
-import 'package:gdsc_2024/utils/data_collab.dart';
+import 'package:gdsc_2024/utils/data.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: OnboardingScreen(),
+        body: HomeBackground(),
       ),
     );
   }

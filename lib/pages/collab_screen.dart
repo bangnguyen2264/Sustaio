@@ -4,7 +4,7 @@ import 'package:gdsc_2024/model/collab_form.dart';
 import 'package:gdsc_2024/pages/collabdetails_screen.dart';
 import 'package:gdsc_2024/services/collab_service.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
-import 'package:gdsc_2024/utils/data_collab.dart';
+import 'package:gdsc_2024/utils/data.dart';
 import 'package:gdsc_2024/widgets/collab_card.dart';
 
 class CollabScreen extends StatelessWidget {

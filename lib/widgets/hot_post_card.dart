@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:gdsc_2024/model/news.dart';
+import 'package:gdsc_2024/model/post.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
 
-class HotNewsCard extends StatelessWidget {
-  final News news;
+class HotPostCard extends StatelessWidget {
+  final Post post;
 
-  HotNewsCard({required this.news});
+  HotPostCard({required this.post});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 5.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
         image: DecorationImage(
-          image: NetworkImage(news.imageUrl),
+          image: NetworkImage(post.imageUrl),
           fit: BoxFit.cover,
         ),
       ),
@@ -40,14 +41,14 @@ class HotNewsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  news.title,
+                  post.title,
                   style: AppStyles.Heading4.copyWith(
                     color: Colors.white,
                   ),
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  news.categories,
+                  post.categoryDto.name,
                   style: AppStyles.Body2.copyWith(
                     color: Colors.white,
                   ),

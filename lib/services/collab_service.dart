@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:gdsc_2024/model/collab_form.dart';
-import 'package:gdsc_2024/model/user.dart';
 import 'package:gdsc_2024/services/api_service.dart';
 import 'package:gdsc_2024/services/global.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +7,7 @@ import 'package:http/http.dart' as http;
 class CollabService {
   Future<List<Collab>> getAllCollab() async {
     String? token =
-        await getSavedToken(); // Replace with your actual authentication token
+        await getSavedToken(); 
 
     final response = await http.get(
       Uri.parse('$baseUrl/api/v1/collab'),
@@ -19,13 +18,13 @@ class CollabService {
       final List<dynamic> jsonList = json.decode(response.body);
       return jsonList.map((json) => Collab.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load users');
+      throw Exception('Failed to load collab');
     }
   }
 
   Future<Collab> getCollabById(int collabId) async {
     String? token =
-        await getSavedToken(); // Replace with your actual authentication token
+        await getSavedToken(); 
 
     final response = await http.get(
       Uri.parse('$baseUrl/api/v1/collab/$collabId'),

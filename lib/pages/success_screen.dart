@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gdsc_2024/backgrounds/home_background.dart';
 import 'package:gdsc_2024/pages/collab_screen.dart';
+import 'package:gdsc_2024/pages/home_screen.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
 
 class SuccessScreen extends StatelessWidget {
@@ -22,7 +24,7 @@ class SuccessScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CollabScreen(),
+                    builder: (context) => HomeBackground(),
                   ),
                 );
               },

@@ -11,4 +11,12 @@ class Category {
       name: json['name'],
     );
   }
+  factory Category.toJson(Map<String, dynamic> json) {
+    return Category(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+
+  toJson() {}
 }

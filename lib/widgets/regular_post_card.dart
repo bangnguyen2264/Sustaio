@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gdsc_2024/model/news.dart';
+import 'package:gdsc_2024/model/post.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
 
-class RegularNewsCard extends StatelessWidget {
-  final News news;
+class RegularPostCard extends StatelessWidget {
+  final Post post;
 
-  RegularNewsCard({required this.news});
+  RegularPostCard({required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +16,9 @@ class RegularNewsCard extends StatelessWidget {
     const int maxTitleLength = 55;
 
     // Truncate the title if it exceeds the maximum length
-    String truncatedTitle = news.title.length > maxTitleLength
-        ? '${news.title.substring(0, maxTitleLength)}...'
-        : news.title;
+    String truncatedTitle = post.title.length > maxTitleLength
+        ? '${post.title.substring(0, maxTitleLength)}...'
+        : post.title;
 
     return Container(
       height: 0.11 * deviceHeight,
@@ -38,7 +38,7 @@ class RegularNewsCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
-                news.imageUrl,
+                post.imageUrl,
                 width: 80.0,
                 height: 0.1 * deviceHeight,
                 fit: BoxFit.cover,
@@ -51,18 +51,25 @@ class RegularNewsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(truncatedTitle, style: AppStyles.Subtitle),
+                  Expanded(
+                      child: Text(truncatedTitle, style: AppStyles.Subtitle)),
                   SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        news.address,
-                        style: AppStyles.Body2,
+                      Expanded(
+                        child: Text(
+                          post.categoryDto.name,
+                          maxLines: 1,
+                          style: AppStyles.Body2,
+                        ),
                       ),
-                      Text(
-                        news.formattedTimeCreate(),
-                        style: AppStyles.smallText,
+                      Expanded(
+                        child: Text(
+                          post.createdAt,
+                          maxLines: 1,
+                          style: AppStyles.smallText,
+                        ),
                       )
                     ],
                   ),
