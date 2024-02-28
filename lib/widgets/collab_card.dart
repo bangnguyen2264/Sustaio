@@ -21,11 +21,10 @@ class CollabCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: EdgeInsets.only(right: 22),
+                margin: EdgeInsets.only(right: 10),
                 child: Row(
                   children: [
                     _buildUserImage(context),
-                    SizedBox(width: 15),
                     _buildTextContent(),
                   ],
                 ),
@@ -50,19 +49,22 @@ class CollabCard extends StatelessWidget {
   }
 
   Widget _buildUserImage(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Image.network(
-            collabCard.userDto.avatarUrl,
-            width: 0.1 * MediaQuery.of(context).size.height,
-            height: 0.1 * MediaQuery.of(context).size.height,
-            fit: BoxFit.cover,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.network(
+              collabCard.userDto.avatarUrl,
+              width: 0.1 * MediaQuery.of(context).size.height,
+              height: 0.1 * MediaQuery.of(context).size.height,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -74,8 +76,8 @@ class CollabCard extends StatelessWidget {
           Text(
             collabCard.userDto.name,
             style: AppStyles.Label,
-            maxLines: 2, // Set your desired maximum number of lines
-            overflow: TextOverflow.ellipsis, // Specify how to handle overflow
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           _buildInforTetx(
             'assets/icons/discount.png',
@@ -142,15 +144,15 @@ class CollabCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeartIcon(bool _isTapped) {
+  Widget _buildHeartIcon() {
+    bool _isTapped = false;
     return GestureDetector(
       onTap: () {
-        // Toggle the tapped state when the icon is pressed
         _isTapped = !_isTapped;
       },
       child: SizedBox(
-        width: 24.0, // Set your desired width
-        height: 24.0, // Set your desired height
+        width: 24.0,
+        height: 24.0,
         child: _isTapped
             ? Image.asset('assets/icons/like.png')
             : Image.asset('assets/icons/like-filled.png'),
