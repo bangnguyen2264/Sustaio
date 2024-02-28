@@ -3,6 +3,7 @@ import 'package:gdsc_2024/model/collab_form.dart';
 import 'package:gdsc_2024/pages/success_screen.dart';
 import 'package:gdsc_2024/services/collab_request_service.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ApllyCollabScreen extends StatefulWidget {
   final Collab collab;
@@ -37,36 +38,50 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
     int _currentPage = 0;
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+      body: Stack(
         children: [
-          Row(
-            children: [
-              _buildUserImage(context),
-              _buildTextContent(),
-            ],
-          ),
-          Material(
-            elevation: 10,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 0.75 * MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
+          SafeArea(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    _buildUserImage(context),
+                    _buildTextContent(),
+                  ],
                 ),
-              ),
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (int page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
-                children: [
-                  _buildFirst(),
-                  _buildSecond(),
-                ],
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0.25 * MediaQuery.of(context).size.height,
+            right: 0,
+            left: 0,
+            child: Material(
+              elevation: 10,
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 0.75 * MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  child: PageView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: _pageController,
+                    onPageChanged: (int page) {
+                      setState(() {
+                        _currentPage = page;
+                      });
+                    },
+                    children: [
+                      _buildFirst(),
+                      _buildSecond(),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -95,10 +110,6 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
           phonenumberController,
           'Số điện thoại',
         ),
-        _buildInputField(
-          categoryController,
-          'Lĩnh vực cây trồng',
-        ),
       ],
     );
   }
@@ -108,11 +119,8 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text('Minh chứng'),
         _buildButtonAddFile(),
-        _buildInputField(
-          titleController,
-          'Tiêu đề',
-        ),
         _buildDescField(
           describtionController,
           'Mô tả',
@@ -199,8 +207,24 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
 
   Widget _buildButtonAddFile() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: AppStyles.neutralColor6,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        fixedSize: Size(110, 33),
+      ),
       onPressed: () {},
-      child: Text('Thêm tệp'),
+      child: Text(
+        'Thêm tệp',
+        style: TextStyle(
+          color: Colors.white,
+          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        maxLines: 1,
+      ),
     );
   }
 
@@ -245,6 +269,7 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
               ),
             ),
           ),
+          _buildButtonToContinue(),
         ],
       ),
     );
@@ -291,28 +316,124 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
               ),
             ),
           ),
-          _buildButtonToSubmit(),
+          _buildRowButtonToApply(),
         ],
       ),
     );
   }
 
-  Widget _buildButtonToSubmit() {
+  Widget _buildButtonToContinue() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Color(0xFFF007AFF),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          maximumSize: Size(127, 50),
+        ),
         onPressed: () {
-          _submitForm();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SuccessScreen(),
-            ),
-          );
+          allFieldsNotEmpty()
+              ? _pageController.nextPage(
+                  duration: Duration(milliseconds: 200),
+                  curve: Curves.ease,
+                )
+              : showErrorMessage();
         },
-        child: Text(
-          'Submit',
-          style: TextStyle(fontSize: 16),
+        child: Center(
+          child: Text(
+            'Continue',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontFamily: GoogleFonts.poppins().fontFamily,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRowButtonToApply() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: AppStyles.neutralColor7,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              maximumSize: Size(124, 50),
+            ),
+            onPressed: () {
+              _pageController.previousPage(
+                duration: Duration(milliseconds: 200),
+                curve: Curves.ease,
+              );
+            },
+            child: Text(
+              'Back',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontFamily: GoogleFonts.poppins().fontFamily,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFF007AFF),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              maximumSize: Size(127, 50),
+            ),
+            onPressed: () {
+              _submitForm();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SuccessScreen(),
+                ),
+              );
+            },
+            child: Text(
+              'Submit',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontFamily: GoogleFonts.poppins().fontFamily,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool allFieldsNotEmpty() {
+    return nameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty &&
+        phonenumberController.text.isNotEmpty &&
+        addressController.text.isNotEmpty;
+  }
+
+  void showErrorMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          'Please fill in all fields',
+          style: AppStyles.Body1.copyWith(
+            color: Colors.white,
+          ),
         ),
       ),
     );
