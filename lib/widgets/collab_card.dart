@@ -10,6 +10,8 @@ class CollabCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool _isTapped = false;
+    final double w = MediaQuery.of(context).size.width;
+    final double h = MediaQuery.of(context).size.height;
     return Container(
       height: 0.19 * MediaQuery.of(context).size.height,
       width: 0.9 * MediaQuery.of(context).size.width,
@@ -25,7 +27,7 @@ class CollabCard extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildUserImage(context),
-                    _buildTextContent(),
+                    _buildTextContent(context),
                   ],
                 ),
               ),
@@ -68,16 +70,23 @@ class CollabCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTextContent() {
+  Widget _buildTextContent(BuildContext context) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            collabCard.userDto.name,
-            style: AppStyles.Label,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          Column(
+            children: [
+              Container(
+                width: 0.54 * MediaQuery.of(context).size.width,
+                child: Text(
+                  collabCard.userDto.name,
+                  style: AppStyles.Label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
           _buildInforTetx(
             'assets/icons/discount.png',
@@ -102,6 +111,9 @@ class CollabCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Image.asset(imagePath),
+          SizedBox(
+            width: 2.0,
+          ),
           Text(
             text,
             style: AppStyles.Body2,
