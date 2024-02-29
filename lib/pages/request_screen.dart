@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gdsc_2024/components/app_bar.dart';
 import 'package:gdsc_2024/model/collab_form.dart';
-import 'package:gdsc_2024/model/collab_request_dto.dart';
+import 'package:gdsc_2024/model/collab_request.dart';
 import 'package:gdsc_2024/pages/collabdetails_screen.dart';
 import 'package:gdsc_2024/services/collab_request_service.dart';
 import 'package:gdsc_2024/services/collab_service.dart';
@@ -15,8 +15,10 @@ class RequestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const TitleAppbar(title: 'Request'),
@@ -28,6 +30,7 @@ class RequestScreen extends StatelessWidget {
             tabs: [
               Tab(text: 'Pending'),
               Tab(text: 'Accepted'),
+              Tab(text: 'Rejected')
             ],
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -45,50 +48,59 @@ class RequestScreen extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          toolbarHeight: 0.1 * h,
         ),
         body: TabBarView(
           children: [
-            // Content of Tab 1
-            _buildRecommendedTab(),
-
-            // Content of Tab 2
-            _buildNewProfileTab(),
+            _buildPendingTab(),
+            _buildAcceptedTab(),
+            _buildRejectedTab()
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRecommendedTab() {
-    return FutureBuilder<List<CollabRequestDto>>(
-      future: CollabRequestService().getAllCollabRequest(),
+  Widget _buildPendingTab() {
+    return FutureBuilder<List<CollabRequest>>(
+      future: CollabRequestService().getCollabRequestByStatus('PENDING'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          List<CollabRequestDto> collabList = snapshot.data ?? [];
+          List<CollabRequest> collabList = snapshot.data ?? [];
           return _buildListCardToCollab(collabList, context);
         }
       },
     );
   }
 
-  Widget _buildNewProfileTab() {
-    // You can add similar logic to fetch data for the New Profile tab
-    return Center(
-      child: Text('Tab 2 Content'),
+  Widget _buildAcceptedTab() {
+    return FutureBuilder<List<CollabRequest>>(
+      future: CollabRequestService().getCollabRequestByStatus('ACCEPTED'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          List<CollabRequest> collabList = snapshot.data ?? [];
+          return _buildListCardToCollab(collabList, context);
+        }
+      },
     );
   }
 
   Widget _buildListCardToCollab(
-      List<CollabRequestDto> collabList, BuildContext context) {
+      List<CollabRequest> collabList, BuildContext context) {
     return Expanded(
       child: ListView.builder(
+        shrinkWrap: true,
         itemCount: collabList.length,
         itemBuilder: (context, index) {
-          return RequestCard(collabRequestDto: collabList[index]);
+          return RequestCard(collabRequest: collabList[index]);
         },
       ),
     );
@@ -105,6 +117,22 @@ class RequestScreen extends StatelessWidget {
         ),
         child: Image.asset('assets/icons/search.png'),
       ),
+    );
+  }
+
+  Widget _buildRejectedTab() {
+    return FutureBuilder<List<CollabRequest>>(
+      future: CollabRequestService().getCollabRequestByStatus('REJECTED'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          List<CollabRequest> collabList = snapshot.data ?? [];
+          return _buildListCardToCollab(collabList, context);
+        }
+      },
     );
   }
 }

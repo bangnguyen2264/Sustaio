@@ -14,7 +14,7 @@ class RequestCard extends StatelessWidget {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Container(
-      height: 0.18 * h,
+      height: 0.2 * h,
       width: 0.9 * h,
       margin: const EdgeInsets.all(20),
       decoration: _buildDecoration(),
@@ -22,7 +22,7 @@ class RequestCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            height: 0.088 * h,
+            height: 0.098 * h,
             width: 0.9 * w,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.vertical(
@@ -38,17 +38,15 @@ class RequestCard extends StatelessWidget {
             ),
           ),
           Container(
-            height: 0.088 * h,
+            height: 0.098 * h,
             width: 0.9 * w,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.vertical(
                 bottom: Radius.circular(15.0),
               ),
             ),
-            child: Row(
-              children: [
-                _buildBottomCard(),
-              ],
+            child: Expanded(
+              child: _buildBottomCard(),
             ),
           ),
         ],
@@ -90,11 +88,12 @@ class RequestCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 15),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Phân phối sản phẩm',
+                collabRequest.title,
                 style: TextStyle(
                   fontSize: 15,
                   fontFamily: GoogleFonts.inter().fontFamily,
@@ -113,38 +112,48 @@ class RequestCard extends StatelessWidget {
   }
 
   Widget _buildBottomCard() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTextContentAtBottom(
+            'assets/icons/paperclip.png',
+            'Đính kèm 1 ảnh',
+          ),
+          _buildTextContentAtBottom(
+            'assets/icons/Group.png',
+            collabRequest.tag,
+          ),
+          _buildTextContentAtBottom(
+            'assets/icons/location.png',
+            collabRequest.address,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextContentAtBottom(String path, String content) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 7),
-              _buildTextContentatBottom('assets/icons/paperclip.png'),
-              _buildTextContentatBottom('assets/icons/Group.png'),
-              _buildTextContentatBottom('assets/icons/location.png'),
-            ],
+        Image.asset(path),
+        SizedBox(width: 5),
+        Expanded(
+          child: Text(
+            content,
+            style: AppStyles.Body2,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildTextContentatBottom(String path) {
-    return Row(
-      children: [
-        Image.asset(path),
-      ],
-    );
-  }
-
   Widget _buildBackgroundCheck() {
-    return Container(
-      margin: const EdgeInsets.only(right: 15),
-      child: Image.asset('assets/icons/Checked.png'),
-    );
+    return Image.asset('assets/icons/Checked.png');
   }
 
   Widget _buildHeartIcon(bool _isTapped) {
