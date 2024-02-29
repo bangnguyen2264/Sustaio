@@ -1,37 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:gdsc_2024/model/collab_request_dto.dart';
+import 'package:gdsc_2024/model/collab_request.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RequestCard extends StatelessWidget {
-  final CollabRequestDto collabRequestDto;
+  final CollabRequest collabRequest;
 
-  const RequestCard({super.key, required this.collabRequestDto});
+  const RequestCard({super.key, required this.collabRequest});
 
   @override
   Widget build(BuildContext context) {
     bool _isTapped = false;
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
     return Container(
-      height: 0.19 * MediaQuery.of(context).size.height,
-      width: 0.9 * MediaQuery.of(context).size.width,
+      height: 0.18 * h,
+      width: 0.9 * h,
       margin: const EdgeInsets.all(20),
       decoration: _buildDecoration(),
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: EdgeInsets.only(right: 22),
-                child: Row(
-                  children: [
-                    _buildUserImage(context),
-                    SizedBox(width: 15),
-                    _buildTextContent(),
-                  ],
-                ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            height: 0.088 * h,
+            width: 0.9 * w,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(15.0),
               ),
-            ],
-          )),
+              color: Color(0xFFF3F3F3),
+            ),
+            child: Row(
+              children: [
+                _buildUserImage(context),
+                _buildTextContent(),
+              ],
+            ),
+          ),
+          Container(
+            height: 0.088 * h,
+            width: 0.9 * w,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(15.0),
+              ),
+            ),
+            child: Row(
+              children: [
+                _buildBottomCard(),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -49,19 +70,18 @@ class RequestCard extends StatelessWidget {
   }
 
   Widget _buildUserImage(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Image.network(
-            collabRequestDto.userDto.avatarUrl,
-            width: 0.1 * MediaQuery.of(context).size.height,
-            height: 0.1 * MediaQuery.of(context).size.height,
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: ClipRRect(
+        borderRadius:
+            BorderRadius.circular(0.07 * MediaQuery.of(context).size.height),
+        child: Image.network(
+          collabRequest.collabDto.userDto.avatarUrl,
+          width: 0.07 * MediaQuery.of(context).size.height,
+          height: 0.07 * MediaQuery.of(context).size.height,
+          fit: BoxFit.cover,
         ),
-      ],
+      ),
     );
   }
 
@@ -70,42 +90,20 @@ class RequestCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            collabRequestDto.userDto.name,
-            style: AppStyles.Label,
-            maxLines: 2, // Set your desired maximum number of lines
-            overflow: TextOverflow.ellipsis, // Specify how to handle overflow
-          ),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset('assets/icons/discount.png'),
               Text(
-                collabRequestDto.userDto.categoryAccount,
-                style: AppStyles.Body2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                'Phân phối sản phẩm',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: GoogleFonts.inter().fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ],
-          ),
-          Row(
-            children: [
-              Image.asset('assets/icons/Group.png'),
               Text(
-                collabRequestDto.status,
+                'Gửi đến: ${collabRequest.collabDto.userDto.name}',
                 style: AppStyles.Body2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Image.asset('assets/icons/location.png'),
-              Text(
-                collabRequestDto.address,
-                style: AppStyles.Body2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -116,32 +114,36 @@ class RequestCard extends StatelessWidget {
 
   Widget _buildBottomCard() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(left: 15),
-          child: Row(
+          margin: EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset('assets/icons/Vector.png'),
-              Text(
-                '4.5 ',
-                style: AppStyles.Subtitle,
-              ),
-              Text(
-                '(240 reviews)',
-                style: AppStyles.Body1.copyWith(
-                  color: Color(0xFF3B3B3B),
-                ),
-              )
+              SizedBox(height: 7),
+              _buildTextContentatBottom('assets/icons/paperclip.png'),
+              _buildTextContentatBottom('assets/icons/Group.png'),
+              _buildTextContentatBottom('assets/icons/location.png'),
             ],
           ),
         ),
-        if (collabRequestDto.collabDto.verified)
-          Container(
-            margin: const EdgeInsets.only(right: 15),
-            child: Image.asset('assets/icons/Checked.png'),
-          ),
       ],
+    );
+  }
+
+  Widget _buildTextContentatBottom(String path) {
+    return Row(
+      children: [
+        Image.asset(path),
+      ],
+    );
+  }
+
+  Widget _buildBackgroundCheck() {
+    return Container(
+      margin: const EdgeInsets.only(right: 15),
+      child: Image.asset('assets/icons/Checked.png'),
     );
   }
 
