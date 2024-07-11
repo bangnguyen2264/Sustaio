@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gdsc_2024/model/collab_form.dart';
 import 'package:gdsc_2024/pages/success_screen.dart';
 import 'package:gdsc_2024/services/collab_request_service.dart';
+import 'package:gdsc_2024/services/image_service.dart';
 import 'package:gdsc_2024/utils/app_styles.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ApllyCollabScreen extends StatefulWidget {
   final Collab collab;
@@ -23,9 +28,25 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phonenumberController = TextEditingController();
+  TextEditingController tagController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController describtionController = TextEditingController();
+  File? image;
+
+  Future _pickImage() async {
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile == null) return;
+
+      setState(() {
+        image = File(pickedFile.path);
+      });
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
@@ -110,6 +131,10 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
           phonenumberController,
           'Số điện thoại',
         ),
+        _buildInputField(
+          tagController,
+          'Lĩnh vực cây trồng',
+        ),
       ],
     );
   }
@@ -120,7 +145,8 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Minh chứng'),
-        _buildButtonAddFile(),
+        _buildButtonAddFile(context),
+        _buildInputField(titleController, 'Tiêu đề'),
         _buildDescField(
           describtionController,
           'Mô tả',
@@ -132,7 +158,7 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
   Widget _buildDescField(TextEditingController controller, String labelText) {
     return Container(
       width: 293,
-      height: 212,
+      height: 170,
       child: Align(
         alignment: Alignment.topLeft,
         child: Column(
@@ -141,7 +167,7 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
             Text('Mô tả'),
             TextField(
               controller: controller,
-              maxLines: 7,
+              maxLines: 5,
             ),
           ],
         ),
@@ -205,16 +231,18 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
     );
   }
 
-  Widget _buildButtonAddFile() {
+  Widget _buildButtonAddFile(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: AppStyles.neutralColor6,
+        primary: image == null ? AppStyles.neutralColor6 : Color(0xFFF007AFF),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
         fixedSize: Size(110, 33),
       ),
-      onPressed: () {},
+      onPressed: () {
+        _pickImage();
+      },
       child: Text(
         'Thêm tệp',
         style: TextStyle(
@@ -295,6 +323,7 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
           ),
           SizedBox(height: 15),
           Container(
+            height: 334,
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.grey,
@@ -395,13 +424,17 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
               maximumSize: Size(127, 50),
             ),
             onPressed: () {
-              _submitForm();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SuccessScreen(),
-                ),
-              );
+              ImageNotEmpty()
+                  ? {
+                      _submitForm(),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SuccessScreen(),
+                        ),
+                      ),
+                    }
+                  : showErrorImageNull();
             },
             child: Text(
               'Submit',
@@ -425,6 +458,10 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
         addressController.text.isNotEmpty;
   }
 
+  bool ImageNotEmpty() {
+    return image != null;
+  }
+
   void showErrorMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -439,18 +476,39 @@ class _ApllyCollabScreenState extends State<ApllyCollabScreen> {
     );
   }
 
-  Future<void> _submitForm() async {
-    Map<String, dynamic> requestData = {
-      "fullName": nameController.text,
-      "email": emailController.text,
-      "phone": phonenumberController.text,
-      "address": addressController.text,
-      "description": describtionController.text,
-      "photographicEvidenceUrl":
-          'https://maynongnghiepbinhminh.com/wp-content/uploads/2022/08/de-an-co.jpg',
-      "collabId": widget.collab.id
-    };
+  void showErrorImageNull() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          'Requires photo proof',
+          style: AppStyles.Body1.copyWith(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
 
-    await CollabRequestService().postCollabRequest(requestData);
+  Future<void> _submitForm() async {
+    String? imageUrl = await ImageService().uploadImage(image!);
+
+    if (imageUrl != null) {
+      Map<String, dynamic> requestData = {
+        "fullName": nameController.text,
+        "email": emailController.text,
+        "phone": phonenumberController.text,
+        "address": addressController.text,
+        "tag": tagController.text,
+        "title": titleController.text,
+        "description": describtionController.text,
+        "photographicEvidenceUrl": imageUrl,
+        "collabId": widget.collab.id
+      };
+
+      await CollabRequestService().postCollabRequest(requestData);
+    } else {
+      print('failed to get image url');
+    }
   }
 }

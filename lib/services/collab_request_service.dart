@@ -25,7 +25,7 @@ class CollabRequestService {
         print('POST request successful');
         print('Response: ${response.body}');
       } else {
-        print(response.headers);
+        print('Failed to POST request ${response.body}');
         // If the server did not return a 200 OK response,
         // throw an exception.
         throw Exception(
@@ -71,5 +71,3 @@ class CollabRequestService {
     }
   }
 }
-
-
